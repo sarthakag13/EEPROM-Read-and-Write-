@@ -1,0 +1,29 @@
+//For Reading from the EEPROM type on Serial Monitor- 'read address'
+//For writing on the EEPROM type on Serial Monitor- 'write address data' 
+#include <EEPROM.h>
+void setup()
+{
+Serial.begin(9600);
+}
+
+void loop()
+{
+  String addr,data,inp;
+  int len,i;
+  if(Serial.available()){// Check on the Serial monitor if command is given
+    inp=Serial.readString();
+    len=inp.length();
+    if(inp[0]=='r'){// Read Operation
+    for(i=5;i<len;i++)
+      addr+=inp[i];
+     Serial.println(EEPROM.read(addr.toInt())); 
+    }
+    if(inp[0]=='w'){//Write operation
+    for(i=6;inp[i]!=' ';i++)
+      addr+=inp[i];
+     for(i=i+1;i<len;i++)
+       data+=inp[i];
+      EEPROM.write(addr.toInt(),data.toInt());
+    }
+  }
+}
